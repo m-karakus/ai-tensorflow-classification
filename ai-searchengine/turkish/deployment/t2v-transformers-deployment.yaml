@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: t2v-transformers-deployment
+spec:
+  selector:
+    matchLabels:
+      app: t2v-transformers-deployment
+  template:
+    metadata:
+      labels:
+        app: t2v-transformers-deployment
+    spec:
+      imagePullSecrets:
+      - name: registrypullsecret
+      containers:
+        - name: t2v-transformers-deployment
+          image: m-karakus/systems:bert-base-turkish-cased-v1.0.0
+          env:
+            - name: ENABLE_CUDA
+              value: "0"
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always

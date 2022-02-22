@@ -1,0 +1,50 @@
+{
+  Get {
+    Document {
+      title
+      content
+      _additional {
+        vector
+      }
+    }
+  }
+}
+
+
+------------
+
+{
+  Get {
+    Article(
+      ask:{
+        question:"who is CEO of the coca-cola?"
+        properties: "summary"
+      }
+    ){
+      title
+      summary
+      _additional {
+        answer{
+          result
+          certainty
+        }
+        certainty
+      }
+
+    }
+  }
+}
+
+---
+{
+  Get {
+    Documnet {
+      title
+      content
+      _additional {
+       certainty
+      }
+
+    }
+  }
+}

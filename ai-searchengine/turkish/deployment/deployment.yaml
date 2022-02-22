@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: weaviate
+  name: weaviate
+spec:
+  selector:
+    matchLabels:
+      app: weaviate
+  template:
+    metadata:
+      labels:
+        app: weaviate
+    spec:
+      imagePullSecrets:
+      - name: registrypullsecret
+      containers:
+        - args:
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8080"
+            - --scheme
+            - http
+          env:
+            - name: AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED
+              value: "true"
+            - name: CLUSTER_HOSTNAME
+              value: node1
+            - name: DEFAULT_VECTORIZER_MODULE
+              value: text2vec-transformers
+            - name: ENABLE_MODULES
+              value: text2vec-transformers
+            - name: PERSISTENCE_DATA_PATH
+              value: /var/lib/weaviate
+            - name: QUERY_DEFAULTS_LIMIT
+              value: "25"
+            - name: TRANSFORMERS_INFERENCE_API
+              value: http://t2v-transformers:8080
+          image: semitechnologies/weaviate:1.10.1
+          name: weaviate
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always

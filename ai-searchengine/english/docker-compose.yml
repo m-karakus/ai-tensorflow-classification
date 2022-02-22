@@ -1,0 +1,42 @@
+---
+version: '3.4'
+services:
+  weaviate:
+    command:
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8080'
+    - --scheme
+    - http
+    image: semitechnologies/weaviate:1.10.0
+    ports:
+    - 8080:8080
+    restart: on-failure:0
+    environment:
+      TRANSFORMERS_INFERENCE_API: 'http://t2v-transformers:8080'
+      QNA_INFERENCE_API: 'http://qna-transformers:8080'   #for question and answer module
+      # NER_INFERENCE_API: 'http://ner-transformers:8080'  #name entity recognition 
+      SPELLCHECK_INFERENCE_API: 'http://text-spellcheck:8080' #spellcheck 
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'
+      ENABLE_MODULES: 'text2vec-transformers,qna-transformers,ner-transformers,text-spellcheck'  #enabled edilen modeller
+      CLUSTER_HOSTNAME: 'node1'
+  t2v-transformers:
+    image: semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+    # image: doncarleone/transformers-inference:dbmdz-bert-base-turkish-128k-uncased #turkce
+    environment:
+      ENABLE_CUDA: '0'
+  qna-transformers:  #question and answer  added
+    image: semitechnologies/qna-transformers:bert-large-uncased-whole-word-masking-finetuned-squad
+    environment:
+      ENABLE_CUDA: '0'
+  # ner-transformers: #name entity recognition added
+  #   image: semitechnologies/ner-transformers:dbmdz-bert-large-cased-finetuned-conll03-english
+    # environment:
+    #   ENABLE_CUDA: '0'
+  text-spellcheck: #spellcheck added
+    image: semitechnologies/text-spellcheck-model:pyspellchecker-en
+...

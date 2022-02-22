@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        environment:
+            service_mode : prod
+        ports:
+        - "22009:22009"
+        depends_on:
+            - worker
+
+    worker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        environment:
+            service_mode : prod
+        command: bash -c "python3 consumer.py"

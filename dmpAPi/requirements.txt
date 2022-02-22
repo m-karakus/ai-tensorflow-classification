@@ -1,0 +1,8 @@
+asyncio
+threaded
+kafka-python
+elasticsearch[async]
+pymssql
+python-dotenv
+fastapi
+uvicorn[standard]
